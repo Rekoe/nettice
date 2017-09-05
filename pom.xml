@@ -19,6 +19,7 @@
   	<commons.codec.version>1.10</commons.codec.version>
   	<dom4j.version>1.6.1</dom4j.version>
   	<fastjson.version>1.2.22</fastjson.version>
+  	<nutz.version>1.r.63-SNAPSHOT</nutz.version>
   </properties>
   
   <dependencies>
@@ -26,6 +27,11 @@
     	<groupId>io.netty</groupId>
     	<artifactId>netty-all</artifactId>
     	<version>${netty.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.nutz</groupId>
+		<artifactId>nutz</artifactId>
+		<version>${nutz.version}</version>
 	</dependency>
 	<dependency>
     	<groupId>org.slf4j</groupId>
