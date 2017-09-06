@@ -25,7 +25,6 @@ public class Render implements Return{
 		this.renderType = renderType;
 	}
 	
-	@Override
 	public FullHttpResponse process() throws Exception {
 		FullHttpResponse response;
 		switch (renderType) {
