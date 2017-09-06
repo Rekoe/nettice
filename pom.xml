@@ -48,12 +48,6 @@
     	<artifactId>dom4j</artifactId>
     	<version>${dom4j.version}</version>
 	</dependency>
-	<dependency>
-    	<groupId>com.alibaba</groupId>
-    	<artifactId>fastjson</artifactId>
-    	<version>${fastjson.version}</version>
-	</dependency>
-	
   </dependencies>
   
 </project>

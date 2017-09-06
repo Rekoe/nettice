@@ -8,20 +8,20 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.codec.CharEncoding;
+import org.nutz.json.Json;
+import org.nutz.lang.util.NutMap;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.GET;
 import org.nutz.mvc.annotation.POST;
 import org.nutz.mvc.annotation.Param;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.cyfonly.nettice.core.convertor.PriTypeConverter;
 import com.cyfonly.nettice.core.convertor.PrimitiveType;
 import com.cyfonly.nettice.core.exception.ActionInvocationException;
@@ -206,19 +206,19 @@ public class BaseAction {
 		String contentType = getContentType(headers);
 		if ("application/json".equals(contentType)) {
 			String jsonStr = fullRequest.content().toString(Charset.forName(CharEncoding.UTF_8));
-			JSONObject obj = JSON.parseObject(jsonStr);
-			for (Entry<String, Object> item : obj.entrySet()) {
-				String key = item.getKey();
-				Object value = item.getValue();
+			NutMap obj = Json.fromJson(NutMap.class, jsonStr);
+			Iterator<Entry<String, Object>> iterator = obj.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Entry<String, Object> entry = iterator.next();
+				String key = entry.getKey();
+				Object value = entry.getValue();
 				Class<?> valueType = value.getClass();
-
 				List<String> valueList = null;
 				if (paramMap.containsKey(key)) {
 					valueList = paramMap.get(key);
 				} else {
 					valueList = new ArrayList<String>();
 				}
-
 				if (PrimitiveType.isPriType(valueType)) {
 					valueList.add(value.toString());
 					paramMap.put(key, valueList);
@@ -232,16 +232,7 @@ public class BaseAction {
 					paramMap.put(key, valueList);
 
 				} else if (List.class.isAssignableFrom(valueType)) {
-					if (valueType.equals(JSONArray.class)) {
-						JSONArray jArray = JSONArray.parseArray(value.toString());
-						for (int i = 0; i < jArray.size(); i++) {
-							valueList.add(jArray.getString(i));
-						}
-					} else {
-						valueList = (ArrayList<String>) value;
-					}
-					paramMap.put(key, valueList);
-
+					paramMap.put(key, (List<String>) value);
 				} else if (Map.class.isAssignableFrom(valueType)) {
 					Map<String, String> tempMap = (Map<String, String>) value;
 					for (String tempKey : tempMap.keySet()) {
@@ -251,13 +242,14 @@ public class BaseAction {
 					}
 				}
 			}
+			paramMap.putAll((Map<? extends String, ? extends List<String>>) obj);
+			return paramMap;
 
 		} else if ("application/x-www-form-urlencoded".equals(contentType)) {
 			String jsonStr = fullRequest.content().toString(Charset.forName(CharEncoding.UTF_8));
 			QueryStringDecoder queryDecoder = new QueryStringDecoder(jsonStr, false);
 			paramMap = queryDecoder.parameters();
 		}
-
 		return paramMap;
 	}
 
