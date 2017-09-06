@@ -1,6 +1,5 @@
 package com.cyfonly.nettice.core;
 
-import org.apache.http.HttpHeaders;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 
@@ -16,6 +15,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.util.AsciiString;
 import io.netty.util.ReferenceCountUtil;
 
 /**
@@ -97,11 +97,12 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter{
 		}
 		return uri.substring(0,startIndex + ACTION_SUFFIX.length());
 	}
+	private static final AsciiString CONTENT_LENGTH = new AsciiString("Content-Length");
 	
 	private void writeResponse(boolean forceClose){
 		boolean close = isClose();
 		if(!close && !forceClose){
-			response.headers().add(HttpHeaders.CONTENT_LENGTH, String.valueOf(response.content().readableBytes()));
+			response.headers().add(CONTENT_LENGTH, String.valueOf(response.content().readableBytes()));
 		}
 		ChannelFuture future = channel.write(response);
 		if(close || forceClose){
@@ -110,9 +111,9 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter{
 	}
 	
 	private boolean isClose(){
-		if(request.headers().contains(HttpHeaders.CONNECTION, CONNECTION_CLOSE, true) ||
+		if(request.headers().contains(CONTENT_LENGTH, CONNECTION_CLOSE, true) ||
 				(request.protocolVersion().equals(HttpVersion.HTTP_1_0) && 
-				!request.headers().contains(HttpHeaders.CONNECTION, CONNECTION_KEEP_ALIVE, true)))
+				!request.headers().contains(CONTENT_LENGTH, CONNECTION_KEEP_ALIVE, true)))
 			return true;
 		return false;
 	}

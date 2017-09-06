@@ -1,11 +1,9 @@
 package com.cyfonly.nettice.examples;
 
-import org.aeonbits.owner.ConfigFactory;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 
 import com.cyfonly.nettice.core.ActionDispatcher;
-import com.cyfonly.nettice.examples.config.ServerConf;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -18,11 +16,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 
-/**
- * 基于 netty4.x 的 http1.1 服务端
- * @author yunfeng.cheng
- * @create 2016-07-24
- */
 public class HttpServer {
 	
 	private static final Log logger = Logs.get();
@@ -61,13 +54,9 @@ public class HttpServer {
 	}
 	
 	public static void main(String[] args) throws Exception{
-		//使用owner管理项目配置  @see owner-doc
-		ServerConf cfg = ConfigFactory.create(ServerConf.class);
-		//初始化请求分发路由配置
 		ActionDispatcher dispatcher = new ActionDispatcher();
-		dispatcher.init(cfg.routerConfigPath());
-		//启动 netty 服务
-		new HttpServer(cfg.port()).run();
+		dispatcher.init("nettice.xml");
+		new HttpServer(8080).run();
 	}
 
 }
