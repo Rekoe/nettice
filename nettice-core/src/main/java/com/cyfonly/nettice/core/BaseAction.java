@@ -1,11 +1,5 @@
 package com.cyfonly.nettice.core;
 
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.QueryStringDecoder;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
@@ -19,8 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.codec.CharEncoding;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -35,6 +29,12 @@ import com.cyfonly.nettice.core.exception.ValidationException;
 import com.cyfonly.nettice.core.utils.GenericsUtil;
 import com.cyfonly.nettice.core.utils.ValidateUtil;
 
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.QueryStringDecoder;
+
 /**
  * Action基础类，所有Action必须继承自此类。BaseAction封装了参数填充、转发、方法调用等功能，并向子类提供render等渲染方法。
  * @author yunfeng.cheng
@@ -42,7 +42,7 @@ import com.cyfonly.nettice.core.utils.ValidateUtil;
  */
 public class BaseAction {
 	
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	protected final Log logger = Logs.get();
 	
 	public Return processRequest(Method method, String methodName) throws Exception {
 		if (method == null) {
@@ -218,7 +218,7 @@ public class BaseAction {
 		Map<String, List<String>> paramMap = new HashMap<String, List<String>>();
 		HttpHeaders headers = fullRequest.headers();
 		String contentType = getContentType(headers);
-		if(contentType.equals("application/json")){
+		if("application/json".equals(contentType)){
 			String jsonStr = fullRequest.content().toString(Charset.forName(CharEncoding.UTF_8));
 			JSONObject obj = JSON.parseObject(jsonStr);
 			for(Entry<String, Object> item : obj.entrySet()){
@@ -266,7 +266,7 @@ public class BaseAction {
 				}
 			}
 			
-		}else if(contentType.equals("application/x-www-form-urlencoded")){
+		}else if("application/x-www-form-urlencoded".equals(contentType)){
 			String jsonStr = fullRequest.content().toString(Charset.forName(CharEncoding.UTF_8));
 			QueryStringDecoder queryDecoder = new QueryStringDecoder(jsonStr, false);
 			paramMap = queryDecoder.parameters();

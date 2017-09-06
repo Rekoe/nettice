@@ -1,30 +1,31 @@
 package com.cyfonly.nettice.core.ret;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.netty.handler.codec.http.FullHttpResponse;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 
 import com.cyfonly.nettice.core.Return;
 import com.cyfonly.nettice.core.utils.HttpRenderUtil;
 
+import io.netty.handler.codec.http.FullHttpResponse;
+
 /**
  * 字符型的输出
+ * 
  * @author yunfeng.cheng
  * @create 2016-08-08
  */
-public class Render implements Return{
-	
-	Logger logger = LoggerFactory.getLogger(Render.class);
-	
+public class Render implements Return {
+
+	private final static Log logger = Logs.get();
+
 	private String data;
 	public RenderType renderType;
-	
+
 	public Render(RenderType renderType, String data) {
 		this.data = data;
 		this.renderType = renderType;
 	}
-	
+
 	public FullHttpResponse process() throws Exception {
 		FullHttpResponse response;
 		switch (renderType) {

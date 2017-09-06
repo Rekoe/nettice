@@ -2,12 +2,12 @@ package com.cyfonly.nettice.core.convertor;
 
 import java.lang.reflect.Method;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 
 public abstract class BaseSimpleTypeConverter implements ITypeConverter {
 	
-	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+	protected final Log logger = Logs.get();
 	
 	/**
 	 * 实现了ITypeConverter中的相同方法

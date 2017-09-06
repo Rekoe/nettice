@@ -17,21 +17,18 @@ import org.nutz.lang.Lang;
 import org.nutz.lang.Streams;
 import org.xml.sax.InputSource;
 
-/**
- * 路由配置
- * 
- * @author yunfeng.cheng
- * @create 2016-08-01
- */
 public class RouterConfig {
 
 	private List<String> actionPackages;
+	
 	private List<Namespace> namespaces;
 
 	private static final String NAME = "name";
+	
 	private static final String PACKAGES = "packages";
 
 	public static RouterConfig parse(String filePath) throws Exception {
+		System.out.println(filePath);
 		File file = Files.findFile(filePath);
 		if (Lang.isEmpty(file)) {
 			throw new IllegalArgumentException("config file [" + filePath + "] not exists");
