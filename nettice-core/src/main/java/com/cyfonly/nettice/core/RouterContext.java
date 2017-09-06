@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.nutz.lang.Lang;
 import org.nutz.lang.Mirror;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.At;
 import org.nutz.resource.Scans;
 
@@ -21,6 +23,8 @@ import com.cyfonly.nettice.core.invocation.ActionProxy;
  * 路由上下文
  */
 public class RouterContext {
+
+	private final static Log log = Logs.get();
 
 	private Map<String, ActionWrapper> actions = new HashMap<String, ActionWrapper>();
 
@@ -43,28 +47,32 @@ public class RouterContext {
 					if (!BaseAction.class.isAssignableFrom(clazz)) {
 						continue;
 					}
-					BaseAction baseAction = Mirror.me(BaseAction.class).born();
+					BaseAction baseAction = (BaseAction) Mirror.me(clazz).born();
 					for (Method method : clazz.getDeclaredMethods()) {
-						if (method.getModifiers() == Modifier.PUBLIC ) {
+						if (method.getModifiers() == Modifier.PUBLIC) {
 							At at = method.getAnnotation(At.class);
-							if(Lang.isEmpty(at)) {
+							if (Lang.isEmpty(at)) {
 								continue;
 							}
 							String[] actions = at.value();
-							if(Lang.isEmptyArray(actions)) {
+							if (Lang.isEmptyArray(actions)) {
 								continue;
 							}
-							for(String action : actions) {
+							for (String action : actions) {
 								String actionPath = action + method.getName() + suffix;
 								if (actionMap.get(actionPath) != null) {
 									throw new DuplicateActionException(actionMap.get(actionPath).method, method, actionPath);
 								}
 								ActionWrapper actionWrapper = new ActionWrapper(baseAction, method, actionPath);
+								if (log.isDebugEnabled()) {
+									log.debugf("load action %s", actionPath);
+								}
 								actionMap.put(actionPath, actionWrapper);
 							}
 						}
 					}
 				} catch (Exception e) {
+					log.error(e);
 				}
 			}
 		}

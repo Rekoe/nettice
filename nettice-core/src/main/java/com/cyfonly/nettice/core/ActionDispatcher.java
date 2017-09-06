@@ -1,6 +1,8 @@
 package com.cyfonly.nettice.core;
 
 import org.apache.http.HttpHeaders;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 
 import com.cyfonly.nettice.core.config.ActionWrapper;
 import com.cyfonly.nettice.core.invocation.ActionProxy;
@@ -22,6 +24,8 @@ import io.netty.util.ReferenceCountUtil;
  * @create 2016-08-01
  */
 public class ActionDispatcher extends ChannelInboundHandlerAdapter{
+	
+	private final static Log log = Logs.get();
 	
 	private static final String CONNECTION_KEEP_ALIVE = "keep-alive";
     private static final String CONNECTION_CLOSE = "close";
@@ -53,7 +57,6 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter{
 		if(msg instanceof HttpRequest){
 			channel = ctx.channel();
 			request = (HttpRequest) msg;
-			
 			try{
 				String path = getRequestPath();
 				ActionWrapper actionWrapper = routerContext.getActionWrapper(path);
@@ -71,6 +74,7 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter{
 				}
 				writeResponse(false);
 			}catch(Exception e){
+				log.error(e);
 				response = HttpRenderUtil.getErroResponse();
 				writeResponse(true);
 			}finally{
@@ -87,6 +91,9 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter{
 	
 	private String getRequestPath() throws Exception{
 		String uri = request.uri();
+		if("/favicon.ico".equals(uri)) {
+			return uri;
+		}
 		int startIndex = uri.indexOf(ACTION_SUFFIX);
 		if(startIndex <= 0){
 			throw new Exception("request path error");
