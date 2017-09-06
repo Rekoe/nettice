@@ -9,8 +9,6 @@ import io.netty.handler.codec.http.HttpVersion;
 
 /**
  * 响应处理工具类
- * @author yunfeng.cheng
- * @create 2016-08-11
  */
 public class HttpRenderUtil {
 	

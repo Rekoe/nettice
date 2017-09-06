@@ -36,9 +36,6 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 
 /**
  * Action基础类，所有Action必须继承自此类。BaseAction封装了参数填充、转发、方法调用等功能，并向子类提供render等渲染方法。
- * 
- * @author yunfeng.cheng
- * @create 2016-08-03
  */
 public class BaseAction {
 

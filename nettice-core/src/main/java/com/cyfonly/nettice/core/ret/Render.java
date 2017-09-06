@@ -10,9 +10,6 @@ import io.netty.handler.codec.http.FullHttpResponse;
 
 /**
  * 字符型的输出
- * 
- * @author yunfeng.cheng
- * @create 2016-08-08
  */
 public class Render implements Return {
 

@@ -20,8 +20,6 @@ import io.netty.util.ReferenceCountUtil;
 
 /**
  * Action 分发器，收到 request 后不做实际业务处理，而是组装 action 并交给处理。
- * @author yunfeng.cheng
- * @create 2016-08-01
  */
 public class ActionDispatcher extends ChannelInboundHandlerAdapter{
 	
@@ -65,7 +63,6 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter{
 					writeResponse(true);
 					return;
 				}
-				
 				DataHolder.setRequest(request);
 				ActionProxy proxy = routerContext.getActionProxy(actionWrapper);
 				Return result = proxy.execute();

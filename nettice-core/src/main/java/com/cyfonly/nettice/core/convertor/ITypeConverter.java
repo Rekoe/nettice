@@ -13,6 +13,6 @@ public interface ITypeConverter {
 	 * @param params 转值时需要提供的可选参数
 	 * @return 经转换过的类型，如果实现类没有能力进行所指定的类型转换，应返回null
 	 */
-	public Object convertValue(Object value, Class<?> toType, Object... params);
+	public Object convertValue(Object value, Class<?> toType);
 	
 }
