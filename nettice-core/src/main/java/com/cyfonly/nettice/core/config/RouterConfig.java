@@ -21,14 +21,7 @@ public class RouterConfig {
 
 	private List<String> actionPackages;
 	
-	private List<Namespace> namespaces;
-
-	private static final String NAME = "name";
-	
-	private static final String PACKAGES = "packages";
-
 	public static RouterConfig parse(String filePath) throws Exception {
-		System.out.println(filePath);
 		File file = Files.findFile(filePath);
 		if (Lang.isEmpty(file)) {
 			throw new IllegalArgumentException("config file [" + filePath + "] not exists");
@@ -52,8 +45,6 @@ public class RouterConfig {
 				Element element = (Element) ie.next();
 				if ("action-package".equals(element.getName())) {
 					config.actionPackages = parseActionPackages(element);
-				} else if ("namespaces".equals(element.getName())) {
-					config.namespaces = parseNamespaces(element);
 				}
 			}
 		}
@@ -70,25 +61,7 @@ public class RouterConfig {
 		return packages;
 	}
 
-	private static List<Namespace> parseNamespaces(Element namespaceElement) {
-		Iterator<?> elementIterator = namespaceElement.elementIterator();
-		List<Namespace> namespaces = new ArrayList<Namespace>();
-		while (elementIterator.hasNext()) {
-			Element element = (Element) elementIterator.next();
-			String name = element.attributeValue(NAME);
-			String packages = element.attributeValue(PACKAGES);
-			Namespace ns = new Namespace(name, packages);
-			namespaces.add(ns);
-		}
-		return namespaces;
-	}
-
 	public List<String> getActionPacages() {
 		return actionPackages;
 	}
-
-	public List<Namespace> getNamespaces() {
-		return namespaces;
-	}
-
 }
