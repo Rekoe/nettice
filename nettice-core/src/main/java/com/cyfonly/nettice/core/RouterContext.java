@@ -33,7 +33,7 @@ public class RouterContext {
 
 	public RouterContext(String configFilePath, String suffix) throws Exception {
 		RouterConfig config = RouterConfig.parse(configFilePath);
-		this.suffix = suffix;
+		this.suffix = "." + suffix;
 		initActionMap(config);
 	}
 
