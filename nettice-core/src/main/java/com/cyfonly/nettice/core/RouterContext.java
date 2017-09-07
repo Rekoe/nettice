@@ -119,4 +119,8 @@ public class RouterContext {
 		proxy.setInvocation(invocation);
 		return proxy;
 	}
+
+	public String getSuffix() {
+		return suffix;
+	}
 }

@@ -28,7 +28,6 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter {
 
 	private static final String CONNECTION_KEEP_ALIVE = "keep-alive";
 	private static final String CONNECTION_CLOSE = "close";
-	private static final String ACTION_SUFFIX = ".action";
 
 	protected static RouterContext routerContext;
 	private HttpRequest request;
@@ -66,8 +65,8 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter {
 				if (actionWrapper == null) {
 					response = HttpRenderUtil.getNotFoundResponse();
 					writeResponse(true);
-					 if (log.isDebugEnabled())
-				            log.debugf("Search mapping path=%s : NOT Action match", path);
+					if (log.isDebugEnabled())
+						log.debugf("Search mapping path=%s : NOT Action match", path);
 					return;
 				}
 				DataHolder.setRequest(request);
@@ -97,11 +96,11 @@ public class ActionDispatcher extends ChannelInboundHandlerAdapter {
 		if ("/favicon.ico".equals(uri)) {
 			return uri;
 		}
-		int startIndex = uri.indexOf(ACTION_SUFFIX);
+		int startIndex = uri.indexOf(routerContext.getSuffix());
 		if (startIndex <= 0) {
 			throw new Exception("request path error");
 		}
-		return uri.substring(0, startIndex + ACTION_SUFFIX.length());
+		return uri.substring(0, startIndex + routerContext.getSuffix().length());
 	}
 
 	private static final AsciiString CONTENT_LENGTH = new AsciiString("Content-Length");
