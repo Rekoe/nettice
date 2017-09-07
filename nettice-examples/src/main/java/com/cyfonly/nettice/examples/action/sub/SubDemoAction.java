@@ -3,10 +3,11 @@ package com.cyfonly.nettice.examples.action.sub;
 import java.util.List;
 import java.util.Map;
 
+import org.nutz.json.Json;
+import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Param;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cyfonly.nettice.core.BaseAction;
 import com.cyfonly.nettice.core.ret.Render;
 import com.cyfonly.nettice.core.ret.RenderType;
@@ -26,11 +27,11 @@ public class SubDemoAction extends BaseAction {
 			System.out.println(key + "=" + srcmap.get(key));
 		}
 
-		JSONObject obj = new JSONObject();
+		NutMap obj = NutMap.NEW();
 		obj.put("code", 0);
 		obj.put("msg", "Received your Map request.[from mapTypeTest]");
 
-		return new Render(RenderType.JSON, obj.toJSONString());
+		return new Render(RenderType.JSON, Json.toJson(obj));
 	}
 
 	// 测试 Array/List 类型参数
@@ -45,11 +46,11 @@ public class SubDemoAction extends BaseAction {
 			System.out.println(item);
 		}
 
-		JSONObject obj = new JSONObject();
+		NutMap obj = NutMap.NEW();
 		obj.put("code", 0);
 		obj.put("msg", "Received your Array/List request.[from arrayListTypeTest()]");
 
-		return new Render(RenderType.JSON, obj.toJSONString());
+		return new Render(RenderType.JSON, Json.toJson(obj));
 	}
 
 	// 使用 @Namespace 注解
@@ -65,11 +66,11 @@ public class SubDemoAction extends BaseAction {
 			System.out.println(item);
 		}
 
-		JSONObject obj = new JSONObject();
+		NutMap obj = NutMap.NEW();
 		obj.put("code", 0);
 		obj.put("msg", "Received your Array/List request.[from arrayListTypeTestWithNamespace()]");
 
-		return new Render(RenderType.JSON, obj.toJSONString());
+		return new Render(RenderType.JSON, Json.toJson(obj));
 	}
 
 }

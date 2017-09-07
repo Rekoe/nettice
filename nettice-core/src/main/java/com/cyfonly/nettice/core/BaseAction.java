@@ -242,7 +242,6 @@ public class BaseAction {
 					}
 				}
 			}
-			paramMap.putAll((Map<? extends String, ? extends List<String>>) obj);
 			return paramMap;
 
 		} else if ("application/x-www-form-urlencoded".equals(contentType)) {
