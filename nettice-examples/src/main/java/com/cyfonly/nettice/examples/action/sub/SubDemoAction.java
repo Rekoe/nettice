@@ -18,6 +18,7 @@ import com.cyfonly.nettice.core.ret.RenderType;
  * @author yunfeng.cheng
  * @create 2016-08-22
  */
+@At("/api2/")
 public class SubDemoAction extends BaseAction {
 
 	// 测试 Map 类型参数
@@ -54,7 +55,7 @@ public class SubDemoAction extends BaseAction {
 	}
 
 	// 使用 @Namespace 注解
-	@At("/nettp/array/")
+	@At("nettp/array/")
 	public Render arrayListTypeTestWithNamespace(@Param(value = "ids") Integer[] ids, @Param(value = "names") List<String> names) {
 		System.out.println("server output ids:");
 		for (int i = 0; i < ids.length; i++) {

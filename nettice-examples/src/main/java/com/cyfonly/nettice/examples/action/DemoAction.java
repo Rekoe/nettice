@@ -13,17 +13,15 @@ import com.cyfonly.nettice.core.ret.RenderType;
  * @author yunfeng.cheng
  * @create 2016-08-22
  */
+@At("/api/")
 public class DemoAction extends BaseAction {
 
-	// 测试基本参数类型
-	@At("/api/")
 	public Render primTypeTest(@Param(value = "id", df = "1") Integer id, @Param(value = "proj") String proj, @Param(value = "author") String author) {
 		System.out.println("Receive parameters: id=" + id + ",proj=" + proj + ",author=" + author);
 		return new Render(RenderType.TEXT, "Received your primTypeTest request.[from primTypeTest]");
 	}
 
-	// 使用 @Namespace 注解
-	@At("/nettp/pri/")
+	@At("pri/")
 	public Render primTypeTestWithNamespace(@Param(value = "id") Integer id, @Param(value = "proj") String proj, @Param(value = "author") String author) {
 		System.out.println("Receive parameters: id=" + id + ",proj=" + proj + ",author=" + author);
 		return new Render(RenderType.TEXT, "Received your primTypeTestWithNamespace request.[from primTypeTestWithNamespace]");

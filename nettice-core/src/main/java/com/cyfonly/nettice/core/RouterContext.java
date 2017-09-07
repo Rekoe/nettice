@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.nutz.lang.Lang;
 import org.nutz.lang.Mirror;
+import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.At;
@@ -28,17 +29,20 @@ public class RouterContext {
 
 	private Map<String, ActionWrapper> actions = new HashMap<String, ActionWrapper>();
 
+	private String suffix = ".action";
+
 	public RouterContext(String configFilePath, String suffix) throws Exception {
 		RouterConfig config = RouterConfig.parse(configFilePath);
-		initActionMap(config, actions, suffix);
+		this.suffix = suffix;
+		initActionMap(config);
 	}
 
 	public RouterContext(String configFilePath) throws Exception {
 		RouterConfig config = RouterConfig.parse(configFilePath);
-		initActionMap(config, actions, ".action");
+		initActionMap(config);
 	}
 
-	private void initActionMap(RouterConfig config, Map<String, ActionWrapper> actionMap, String suffix) {
+	private void initActionMap(RouterConfig config) {
 		List<String> packages = config.getActionPacages();
 		for (String packagee : packages) {
 			List<Class<?>> clazzs = Scans.me().scanPackage(packagee);
@@ -48,26 +52,16 @@ public class RouterContext {
 						continue;
 					}
 					BaseAction baseAction = (BaseAction) Mirror.me(clazz).born();
-					for (Method method : clazz.getDeclaredMethods()) {
-						if (method.getModifiers() == Modifier.PUBLIC) {
-							At at = method.getAnnotation(At.class);
-							if (Lang.isEmpty(at)) {
-								continue;
-							}
-							String[] actions = at.value();
-							if (Lang.isEmptyArray(actions)) {
-								continue;
-							}
-							for (String action : actions) {
-								String actionPath = action + method.getName() + suffix;
-								if (actionMap.get(actionPath) != null) {
-									throw new DuplicateActionException(actionMap.get(actionPath).method, method, actionPath);
-								}
-								ActionWrapper actionWrapper = new ActionWrapper(baseAction, method, actionPath);
-								if (log.isDebugEnabled()) {
-									log.debugf("load action %s", actionPath);
-								}
-								actionMap.put(actionPath, actionWrapper);
+					At atClass = clazz.getAnnotation(At.class);
+					if (Lang.isEmpty(atClass)) {
+						for (Method method : clazz.getDeclaredMethods()) {
+							registerAction("", baseAction, method);
+						}
+					} else {
+						String[] classUrl = atClass.value();
+						for (String atUrl : classUrl) {
+							for (Method method : clazz.getDeclaredMethods()) {
+								registerAction(atUrl, baseAction, method);
 							}
 						}
 					}
@@ -76,6 +70,39 @@ public class RouterContext {
 				}
 			}
 		}
+	}
+
+	private void registerAction(String clzAction, BaseAction baseAction, Method method) {
+		if (method.getModifiers() == Modifier.PUBLIC) {
+			At at = method.getAnnotation(At.class);
+			boolean isRight = !Lang.isEmpty(at) || Strings.isNotBlank(clzAction);
+			if (isRight) {
+				if (Lang.isEmpty(at)) {
+					registerAt(clzAction + method.getName(), method, baseAction);
+				} else {
+					String[] actions = at.value();
+					if (Lang.isEmptyArray(actions)) {
+						registerAt(clzAction + method.getName(), method, baseAction);
+					} else {
+						for (String action : actions) {
+							registerAt(clzAction + action + method.getName(), method, baseAction);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void registerAt(String action, Method method, BaseAction baseAction) {
+		String actionPath = action + method.getName() + suffix;
+		if (this.actions.get(actionPath) != null) {
+			throw new DuplicateActionException(this.actions.get(actionPath).method, method, actionPath);
+		}
+		ActionWrapper actionWrapper = new ActionWrapper(baseAction, method, actionPath);
+		if (log.isDebugEnabled()) {
+			log.debugf("load action %s", actionPath);
+		}
+		this.actions.put(actionPath, actionWrapper);
 	}
 
 	public ActionWrapper getActionWrapper(String path) {

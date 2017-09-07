@@ -17,7 +17,7 @@
     	      
       	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       		<!-- daily rollover -->
-      		<fileNamePattern>/data/weblog/nettp/nettp.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+      		<fileNamePattern>nettp.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
       		<!-- keep 10 days' worth of history -->
       		<maxHistory>10</maxHistory>
     	</rollingPolicy>
@@ -37,7 +37,7 @@
       
       	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       		<!-- daily rollover -->
-      		<fileNamePattern>/data/weblog/nettp/nettp_error.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+      		<fileNamePattern>nettp_error.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
       		<!-- keep 10 days' worth of history -->
       		<maxHistory>10</maxHistory>
     	</rollingPolicy>
