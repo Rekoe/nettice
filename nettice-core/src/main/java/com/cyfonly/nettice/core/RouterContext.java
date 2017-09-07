@@ -78,14 +78,14 @@ public class RouterContext {
 			boolean isRight = !Lang.isEmpty(at) || Strings.isNotBlank(clzAction);
 			if (isRight) {
 				if (Lang.isEmpty(at)) {
-					registerAt(clzAction + method.getName(), method, baseAction);
+					registerAt(clzAction, method, baseAction);
 				} else {
 					String[] actions = at.value();
 					if (Lang.isEmptyArray(actions)) {
-						registerAt(clzAction + method.getName(), method, baseAction);
+						registerAt(clzAction, method, baseAction);
 					} else {
 						for (String action : actions) {
-							registerAt(clzAction + action + method.getName(), method, baseAction);
+							registerAt(clzAction + action, method, baseAction);
 						}
 					}
 				}
