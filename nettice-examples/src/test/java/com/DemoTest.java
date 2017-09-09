@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
+import org.nutz.json.Json;
+import org.nutz.lang.util.NutMap;
 
 /**
  * 测试 Demo
@@ -75,14 +76,14 @@ public class DemoTest {
 	 */
 	private static void sendPostJsonArrayAndList() throws Exception{
 		String path = "http://127.0.0.1:8080/nettp/sub/arrayListTypeTest.action";
-		JSONObject obj = new JSONObject();
+		NutMap obj = NutMap.NEW();
 		int[] ids = {1,2,3};
 		List<String> names = new ArrayList<String>();
 		names.add("aaaa");
 		names.add("bbbb");
 		obj.put("ids", ids);
 		obj.put("names", names);
-		String jsonStr = obj.toJSONString();
+		String jsonStr = Json.toJson(obj);
 		byte[] data = jsonStr.getBytes();
         java.net.URL url = new java.net.URL(path);
         java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
@@ -109,14 +110,14 @@ public class DemoTest {
 	 */
 	private static void sendPostJsonArrayAndListWithNamespace() throws Exception{
 		String path = "http://127.0.0.1:8080/nettp/array/arrayListTypeTestWithNamespace.action";
-		JSONObject obj = new JSONObject();
+		NutMap obj = NutMap.NEW();
 		int[] ids = {1,2,3};
 		List<String> names = new ArrayList<String>();
 		names.add("aaaa");
 		names.add("bbbb");
 		obj.put("ids", ids);
 		obj.put("names", names);
-		String jsonStr = obj.toJSONString();
+		String jsonStr = Json.toJson(obj);
 		byte[] data = jsonStr.getBytes();
         java.net.URL url = new java.net.URL(path);
         java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
@@ -170,12 +171,12 @@ public class DemoTest {
 	 */
 	private static void sendPostJsonMap() throws Exception{
 		String path = "http://127.0.0.1:8080/nettp/sub/mapTypeTest.action";
-		JSONObject obj = new JSONObject();
+		NutMap obj = NutMap.NEW();
 		Map<String, String> srcmap = new HashMap<String, String>();
 		srcmap.put("proj", "nettp");
 		srcmap.put("author", "cyfonly");
 		obj.put("srcmap", srcmap);
-		String jsonStr = obj.toJSONString();
+		String jsonStr = Json.toJson(obj);
 		byte[] data = jsonStr.getBytes();
         java.net.URL url = new java.net.URL(path);
         java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
